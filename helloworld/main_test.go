@@ -51,3 +51,22 @@ func TestSayHelloWhenUserNotFound(t *testing.T) {
 		t.Errorf("expected 'user not found' error, got %s", err.Error())
 	}
 }
+
+func TestLogAdapterForGettingUserNameRepository(t *testing.T) {
+	ctx := context.Background()
+
+	mockRepo := &MockGettingUserNameRepository{}
+	logAdapter := NewLogAdapterForGettingUserNameRepository(mockRepo)
+
+	helloService := NewHelloService(logAdapter)
+
+	result, err := helloService.SayHello(ctx, 1)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	expected := "Hello, Alice!"
+
+	if result != expected {
+		t.Errorf("expected %s, got %s", expected, result)
+	}
+}
